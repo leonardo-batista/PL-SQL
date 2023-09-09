@@ -1,0 +1,21 @@
+CREATE OR REPLACE PROCEDURE P_UPDATE_IMAGE
+
+IS
+
+BEGIN
+
+    BEGIN
+        SAVEPOINT MY_SAVEPOINT_TEST;
+   
+        UPDATE CO.PRODUCTS SET IMAGE_LAST_UPDATED = SYSDATE;
+   
+        EXCEPTION
+            WHEN OTHERS THEN
+                ROLLBACK TO MY_SAVEPOINT_TEST;
+                raise_application_error(-200001,'Error Failed - ' ||SQLCODE||' #ERROR# '||SQLERRM);
+    END;
+    
+    COMMIT;
+   
+END;
+/
